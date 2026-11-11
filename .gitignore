@@ -1,0 +1,12 @@
+# KiCad working files
+*.lck
+~*
+*-backups/
+fp-info-cache
+*.kicad_prl
+
+# tool output and caches
+tools/schematic/out/
+tools/fab/jlc-lib/
+__pycache__/
+.DS_Store

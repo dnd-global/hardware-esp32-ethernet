@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "module")(type "KiCad")(uri "${KIPRJMOD}/module.kicad_sym")(options "")(descr "Ký hiệu dùng trong sơ đồ này"))
+)
