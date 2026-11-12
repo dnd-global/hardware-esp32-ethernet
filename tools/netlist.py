@@ -75,13 +75,8 @@ PARTS = {
            31.0, 58.2, 90, {"1": "GND", "2": "PROG_TX", "3": "PROG_RX", "4": "USB_DM", "5": "USB_DP"}, True),
     "R3": (R0603, "1k", "C21190", 34.0, 28.5, 0, {"1": "+3V3", "2": "LED1_A"}, False),
     "LED1": (LED0603, "PWR red", "C2286", 37.0, 28.5, 0, {"1": "GND", "2": "LED1_A"}, False),
-    # Status light: an addressable RGB LED on GPIO38 (STATUS). It was a white 0603 LED (C2290) until
-    # 2026-11-12. R4 stays as the series resistor on the data line; C36 is the LED's own decoupling.
-    # Pads of the WS2812B-2020: 1 DO (not connected), 2 GND, 3 DI, 4 VDD.
-    "R4": (R0603, "150R", "C22808", 34.0, 31.0, 0, {"1": "STATUS", "2": "LED2_DIN"}, False),
-    "LED2": (std("LED_SMD", "LED_WS2812B-2020_PLCC4_2.0x2.0mm"), "WS2812B-2020-V6", "C52917434", 41.535, 32.2, 0,
-             {"2": "GND", "3": "LED2_DIN", "4": "+3V3"}, False),
-    "C36": (C0603, "100nF", "C14663", 41.675, 30.15, 180, {"1": "+3V3", "2": "GND"}, False),
+    "R4": (R0603, "150R", "C22808", 34.0, 31.0, 0, {"1": "STATUS", "2": "LED2_A"}, False),
+    "LED2": (LED0603, "STATUS white", "C2290", 37.0, 31.0, 0, {"1": "GND", "2": "LED2_A"}, False),
     # ---- W5500 Ethernet (WIZnet reference schematic, RJ45 with magnetics) ----
     "U5": (std("Package_QFP", "LQFP-48_7x7mm_P0.5mm"), "W5500", "C32843", ETH_X, ETH_Y, 90,
            {"1": "ETH_TXN", "2": "ETH_TXP", "3": "GND", "4": "+3V3A", "5": "ETH_RXN", "6": "ETH_RXP",
@@ -172,8 +167,7 @@ POS = {
     "C24": (23.2, 48.4, 180), "C23": (23.2, 49.9, 180), "R18": (27.4, 49.2, 270),
     "C22": (15.0, 42.4, 180), "R13": (18.0, 42.4, 180),
     "R16": (21.4, 55.6, 0), "R17": (21.4, 57.2, 0), "J5": (31.0, 63.4, 90),
-    "R3": (37.4, 28.6, 0), "LED1": (40.4, 28.6, 0), "R4": (37.4, 30.6, 0), "LED2": (41.535, 32.2, 0),
-    "C36": (41.675, 30.15, 180),
+    "R3": (37.4, 28.6, 0), "LED1": (40.4, 28.6, 0), "R4": (37.4, 30.6, 0), "LED2": (40.4, 30.6, 0),
     "SW2": (39.4, 36.6, 0), "SW1": (35.0, 59.0, 0),
     # isolator: 100 nF within 2 mm of the supply pins, on the IC layer
     "C16": (39.6, 41.2, 270), "C14": (37.75, 41.2, 270), "C17": (39.6, 48.8, 270),

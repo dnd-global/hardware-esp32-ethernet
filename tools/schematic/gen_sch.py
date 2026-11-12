@@ -49,7 +49,7 @@ for ref, (label, net) in TESTPOINTS.items():
 # values that read better on a drawing than the working notes kept in PARTS
 VALUE.update({
     "U1": "LMR36520FADDAR", "J1": "KF128-5.08-2P", "J5": "1x5 2,54 mm (không lắp)", "J6": "TYPE-C-31-M-12",
-    "SW1": "TS-1187A (RESET)", "SW2": "TS-1187A (BOOT)", "LED1": "LED đỏ",
+    "SW1": "TS-1187A (RESET)", "SW2": "TS-1187A (BOOT)", "LED1": "LED đỏ", "LED2": "LED trắng",
 })
 
 LIB = kisch.Lib()
@@ -350,19 +350,14 @@ def sheet_mcu():
     s.w(("SW2", "3"), (96.52, 124.46), (96.52, 127.0), (96.52, 132.08)); s.w(("SW2", "4"), (96.52, 127.0)); s.term((96.52, 132.08), "GND")
     DONE.update({("SW2", str(i)) for i in range(1, 5)})
     s.sub("Boot: giữ SW2 rồi nhấn SW1 để vào chế độ nạp. Khi chạy, SW2 là nút bấm trên IO0", 45.72, 114.3)
-    # status light: addressable RGB LED, one data wire from IO38 through R4
-    s.glabel("STATUS", (53.34, 157.48), "L")
-    s.w((53.34, 157.48), (58.42, 157.48))
-    p = s.hpart("R4", 58.42, 157.48, "STATUS")
-    s.box("LED2", "WS2812B-2020", [None, ("3", "DI"), None], [None, ("1", "DO"), None], 15.24, 81.28, 152.4, prefix="LED",
-          top=[("4", "VDD", 5.08)], bottom=[("2", "GND", 10.16)], ref_at=(76.2, 153.67, "left"), val_at=(93.98, 166.2, "left"))
-    s.w(p, ("LED2", "3")); s.llabel("LED2_DIN", (67.31, 157.48))
-    s.w(("LED2", "4"), (114.3, 149.86)); s.term(s.P("LED2", "4"), "+3V3")
-    s.down(114.3, 149.86, ["C36"], "+3V3")
-    s.term(s.P("LED2", "2"), "GND")
-    s.nc(s.P("LED2", "1"))
-    DONE.update({("LED2", k) for k in "1234"})
-    s.sub("Đèn trạng thái RGB trên IO38: R4 nối tiếp đường dữ liệu, C36 lọc nguồn cho LED", 45.72, 143.51)
+    # status LED
+    s.glabel("STATUS", (53.34, 152.4), "L")
+    s.w((53.34, 152.4), (58.42, 152.4))
+    p = s.hpart("R4", 58.42, 152.4, "STATUS")
+    s.w(p, (76.2, 152.4)); s.llabel("LED2_A", (67.31, 152.4))
+    p = s.hpart("LED2", 76.2, 152.4, "LED2_A")
+    s.w(p, (88.9, 152.4), (88.9, 157.48)); s.term((88.9, 157.48), "GND")
+    s.sub("Đèn trạng thái trên IO38, sáng khi IO38 ở mức cao", 45.72, 143.51)
     # programming header
     s.box("J5", "HDR_1x5", [], [("1", "GND"), ("2", "TXD0"), ("3", "RXD0"), ("4", "D-"), ("5", "D+")], 12.7, 45.72, 180.34, prefix="J")
     s.stub("J5", "1", 25.4)
@@ -378,7 +373,6 @@ def sheet_mcu():
         "IO17 phát, IO18 thu: UART đi qua IC cách ly ra cổng ngoài.",
         "IO19 / IO20 là USB gốc của ESP32, chỉ đưa ra hàng lỗ J5.",
         "IO0, IO3, IO45, IO46 là chân strapping. IO0 có nút BOOT; ba chân còn lại để hở, dùng mức mặc định trong chip.",
-        "LED2: WS2812B-2020, LED RGB có IC điều khiển bên trong, nhận dữ liệu một dây từ IO38 và chạy ở 3,3 V. Chân DO để hở.",
     ])
     return s
 
@@ -584,7 +578,7 @@ def root_sheet(sheets):
     text("Rev B · mạch in 2 lớp 80 × 66 mm · ESP32-S3-WROOM-1 · Ethernet W5500 · UART TTL 3,3 V cách ly 5 kV · nguồn vào 9–36 V", 25.4, 46.99, 2.0)
     inside = {
         "nguon": ["Cọc vít 9–36 V", "Cầu chì, chống ngược cực, TVS, lọc", "Buck LMR36520 ra +3V3"],
-        "esp32": ["ESP32-S3-WROOM-1-N8", "Reset, Boot, đèn trạng thái RGB", "Hàng lỗ nạp chương trình"],
+        "esp32": ["ESP32-S3-WROOM-1-N8", "Reset, Boot, đèn trạng thái", "Hàng lỗ nạp chương trình"],
         "ethernet": ["W5500 qua SPI", "Thạch anh 25 MHz", "Đầu cuối và cổng RJ45 có biến áp"],
         "uart": ["CA-IS3642HVW cách ly 5 kV", "Cổng đệm Schmitt, chống tĩnh điện", "Đầu cắm UART phía thiết bị ngoài"],
     }
