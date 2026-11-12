@@ -13,7 +13,8 @@ Module nối một thiết bị có cổng UART TTL 3,3 V vào mạng. Tín hi�
 | Vi điều khiển | ESP32-S3-WROOM-1-N8, anten mạch in |
 | Ethernet | W5500 nối qua SPI, cổng RJ45 HR911105A có sẵn biến áp |
 | UART | TTL 3,3 V, cách ly 5 kV bằng CA-IS3642HVW, khe cách ly trên mạch 7,6 mm |
-| Linh kiện | 73 linh kiện, 43 loại, lắp một mặt |
+| Đèn báo | LED nguồn và LED trạng thái RGB WS2812B-2020 trên IO38 |
+| Linh kiện | 74 linh kiện, 43 loại, lắp một mặt |
 | Phần mềm | KiCad 9 |
 
 ## Cần góp ý ở đâu
@@ -53,7 +54,7 @@ Bản PDF đủ 5 trang: [`docs/so-do-nguyen-ly.pdf`](docs/so-do-nguyen-ly.pdf).
 
 Mạch này được làm theo thứ tự ngược với thông thường: linh kiện được đặt bằng script từ bảng nối dây [`tools/netlist.py`](tools/netlist.py), đi dây tự động rồi chỉnh tiếp. Sơ đồ nguyên lý được sinh sau, cũng từ bảng đó, để người xem dễ đọc. Vì vậy **file mạch in là bản gốc**. Đừng chạy "Update PCB from Schematic": sáu pad đo mang tên khác nhau ở hai bên (TP1–TP6 trong sơ đồ, 3V3/GND/TXD/RXD/VISO/GISO trên mạch) và footprint trên mạch chưa gắn với ký hiệu trong sơ đồ.
 
-Sơ đồ được đối chiếu tự động với mạch in bằng [`tools/schematic/check_sch.py`](tools/schematic/check_sch.py): 80 linh kiện, 53 đường mạch và 253 chân đều khớp, tên đường mạch cũng trùng. Kiểm tra luật điện (ERC) của KiCad không báo lỗi.
+Sơ đồ được đối chiếu tự động với mạch in bằng [`tools/schematic/check_sch.py`](tools/schematic/check_sch.py): 81 linh kiện, 53 đường mạch và 256 chân đều khớp, tên đường mạch cũng trùng. Kiểm tra luật điện (ERC) của KiCad không báo lỗi.
 
 ## Mạch in
 
@@ -81,7 +82,7 @@ Cận cảnh ba vùng đáng xem kỹ. Trong các ảnh này, đỏ là lớp tr
 | Đường mạch | nhỏ nhất 0,2 mm, khe hở nhỏ nhất 0,15 mm |
 | Via | 0,6 mm, lỗ 0,3 mm, phủ sơn |
 | Lỗ bắt vít | 4 lỗ M3 (3,2 mm), không mạ |
-| Lắp ráp | 73 linh kiện, một mặt. Cổng RJ45 và cọc vít là loại cắm xuyên lỗ. Hàng chân J5 không lắp. |
+| Lắp ráp | 74 linh kiện, một mặt. Cổng RJ45 và cọc vít là loại cắm xuyên lỗ. Hàng chân J5 không lắp. |
 
 File trong `fab/` được chuẩn bị cho dịch vụ lắp ráp của JLCPCB:
 
@@ -89,7 +90,7 @@ File trong `fab/` được chuẩn bị cho dịch vụ lắp ráp của JLCPCB:
 - `gateway-s3-revb-bom.csv`: danh sách linh kiện kèm mã LCSC, mỗi mã một dòng.
 - `gateway-s3-revb-cpl.csv`: vị trí và góc đặt linh kiện.
 
-JLCPCB đặt footprint trong thư viện của họ vào vị trí và góc ghi ở file CPL, nên chỗ nào footprint KiCad khác footprint JLCPCB thì file CPL phải bù lại. Ở mạch này có bốn chỗ: U5 xoay −90°, D3 xoay 180°, U4 xoay 270°, J6 lệch 1,41 mm. [`tools/fab/check_cpl.py`](tools/fab/check_cpl.py) kiểm tra việc này cho cả 73 linh kiện: nó đặt footprint của JLCPCB theo từng dòng CPL rồi đo xem mỗi chân rơi cách pad trên mạch bao xa và có đúng chân không.
+JLCPCB đặt footprint trong thư viện của họ vào vị trí và góc ghi ở file CPL, nên chỗ nào footprint KiCad khác footprint JLCPCB thì file CPL phải bù lại. Ở mạch này có bốn chỗ: U5 xoay −90°, D3 xoay 180°, U4 xoay 270°, J6 lệch 1,41 mm. [`tools/fab/check_cpl.py`](tools/fab/check_cpl.py) kiểm tra việc này cho cả 74 linh kiện: nó đặt footprint của JLCPCB theo từng dòng CPL rồi đo xem mỗi chân rơi cách pad trên mạch bao xa và có đúng chân không.
 
 ## Hạn chế đã biết
 
@@ -98,6 +99,7 @@ JLCPCB đặt footprint trong thư viện của họ vào vị trí và góc ghi
 - Cổng RJ45 chỉ ghi chịu 0–70 °C, cổng USB-C từ −30 đến 80 °C; chưa phải dải nhiệt công nghiệp đầy đủ.
 - Vỏ cổng RJ45 nối thẳng mass, không qua tụ 1 nF / 2 kV. Chưa có linh kiện chống tĩnh điện riêng cho cặp Ethernet.
 - Đầu cắm UART mượn đầu USB-C nhưng không phải cổng USB: D− là chiều phát ra thiết bị ngoài, D+ là chiều thu về, mức 3,3 V.
+- LED trạng thái WS2812B-2020-V6 chạy ở 3,3 V, đúng mép dưới dải cấp 3,3–5,3 V của nó. Độ sáng trong datasheet đo ở 5 V nên trên mạch này có thể thấp hơn.
 
 ## Công cụ
 
